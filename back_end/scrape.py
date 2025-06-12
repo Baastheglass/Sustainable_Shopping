@@ -10,7 +10,7 @@ if __name__ == "__main__":
         print(result)
         for site in shopping_sites:
             if site in result:
-                print("If entered")
+                #print("If entered")
                 response = requests.get(result)
                 soup = BeautifulSoup(response.text, 'html.parser')
                 if site == "habitt":
@@ -25,14 +25,13 @@ if __name__ == "__main__":
                         possible_image_links = list(possible_image_links)
                         try:
                             for link in possible_image_links:
-                                print(link.get("id"))
+                                #print(link.get("id"))
                                 if(link.get("id") != None):
                                     if "product-featured-image" in link.get("id"):
                                         image_link = link.get("src")
                                         image_link = str(image_link)[2:]
-                                        image_links.append(image_link)
-                            print(image_links)
-                            break  
+                                        image_links.append(image_link) 
                         except Exception as e:
                             print(e)
+                    print(image_links)
                 
