@@ -3,7 +3,7 @@ from googlesearch import search
 from bs4 import BeautifulSoup
 
 if __name__ == "__main__":
-    shopping_sites = open("shopping_sites.txt", "r").read().splitlines()
+    shopping_sites = open("./shopping_sites.txt", "r").read().splitlines()
     query = input("Enter query: ")
     search_results = search(query, num_results=10)
     for result in search_results:
@@ -25,10 +25,14 @@ if __name__ == "__main__":
                         possible_image_links = list(possible_image_links)
                         try:
                             for link in possible_image_links:
-                                if "product-featured-image" in link.get("id"):
-                                    image_links.append(link.get("src"))
+                                print(link.get("id"))
+                                if(link.get("id") != None):
+                                    if "product-featured-image" in link.get("id"):
+                                        image_link = link.get("src")
+                                        image_link = str(image_link)[2:]
+                                        image_links.append(image_link)
                             print(image_links)
                             break  
                         except Exception as e:
                             print(e)
-                #print(soup)
+                
