@@ -1,9 +1,15 @@
+from email.mime import image
 import requests
 from googlesearch import search
 from bs4 import BeautifulSoup
 import random
 import sys
 from selenium import webdriver
+import undetected_chromedriver as uc
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
+import time
 
 if __name__ == "__main__":
     shopping_sites = open("./shopping_sites.txt", "r").read().splitlines()
@@ -57,13 +63,23 @@ if __name__ == "__main__":
                     #     except Exception as e:
                     #         print(e)
                     # print(image_links)
-                elif site == "amazon":
-                    print("Amazon site detected")
-                    #response = requests.get(result, headers=headers)
-                    #soup = BeautifulSoup(response.text, 'html.parser')
-                    #print(soup)
-                    driver = webdriver.Chrome()
+                elif site == "daraz":
+                    print("Daraz site detected")
+                    driver = uc.Chrome()
                     driver.get(result)
-                    # images = soup.find_all('img')
+                    try:
+                        wait_element = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "root > div > div.ant-row.FrEdP.css-1bkhbmc.app > div:nth-child(1) > div > div.ant-col.ant-col-20.ant-col-push-4.Jv5R8.css-1bkhbmc.app > div._17mcb > div:nth-child(1) > div > div > div.ICdUp > div > a")))
+                    except:
+                        pass
+                    links = driver.find_elements(By.TAG_NAME, "a")
+                    product_links = []
+                    for link in links:
+                        print(link.get_attribute("href"))
+                        if '/products/' in link.get_attribute("href"):
+                            product_links.append(link.get_attribute("href"))
+                    for link in product_links:
+                        print(link)
+                    sys.exit(0)
+                    #images = soup.find_all('img')#root > div > div.ant-row.FrEdP.css-1bkhbmc.app > div:nth-child(1) > div > div.ant-col.ant-col-20.ant-col-push-4.Jv5R8.css-1bkhbmc.app > div._17mcb > div:nth-child(1) > div > div > div.ICdUp > div > a
                     # print(images)
                     #sys.exit(0)
