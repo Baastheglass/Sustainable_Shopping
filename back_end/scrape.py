@@ -2,6 +2,8 @@ import requests
 from googlesearch import search
 from bs4 import BeautifulSoup
 import random
+import sys
+from selenium import webdriver
 
 if __name__ == "__main__":
     shopping_sites = open("./shopping_sites.txt", "r").read().splitlines()
@@ -57,9 +59,11 @@ if __name__ == "__main__":
                     # print(image_links)
                 elif site == "amazon":
                     print("Amazon site detected")
-                    response = requests.get(result, headers=headers)
-                    soup = BeautifulSoup(response.text, 'html.parser')
-                    print(soup)
+                    #response = requests.get(result, headers=headers)
+                    #soup = BeautifulSoup(response.text, 'html.parser')
+                    #print(soup)
+                    driver = webdriver.Chrome()
+                    driver.get(result)
                     # images = soup.find_all('img')
                     # print(images)
-                    break
+                    #sys.exit(0)
