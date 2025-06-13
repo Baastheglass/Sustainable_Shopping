@@ -67,19 +67,26 @@ if __name__ == "__main__":
                     print("Daraz site detected")
                     driver = uc.Chrome()
                     driver.get(result)
-                    try:
-                        wait_element = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "root > div > div.ant-row.FrEdP.css-1bkhbmc.app > div:nth-child(1) > div > div.ant-col.ant-col-20.ant-col-push-4.Jv5R8.css-1bkhbmc.app > div._17mcb > div:nth-child(1) > div > div > div.ICdUp > div > a")))
-                    except:
-                        pass
+                    #waiting until DOM has loaded fully
+                    WebDriverWait(driver, 30).until(lambda d: d.execute_script("return document.readyState") == "complete")
                     links = driver.find_elements(By.TAG_NAME, "a")
                     product_links = []
                     for link in links:
-                        print(link.get_attribute("href"))
-                        if '/products/' in link.get_attribute("href"):
-                            product_links.append(link.get_attribute("href"))
+                        # print(link.get_attribute("href"))
+                        # print(type(link.get_attribute("href")))
+                        if(link.get_attribute("href") != None):
+                            if '/products/' in link.get_attribute("href"):
+                                product_links.append(link.get_attribute("href"))
                     for link in product_links:
-                        print(link)
-                    sys.exit(0)
+                        response = requests.get(link, headers=headers)
+                        soup = BeautifulSoup(response.text, 'html.parser')
+                        print(soup)
+                        images = soup.find_all("img")
+                        for img in images:
+                            if(img.get("src") != None):
+                                if("80x80" not in img.get("src")):
+                                    print(img.get("src"))
+                            sys.exit(0)        
                     #images = soup.find_all('img')#root > div > div.ant-row.FrEdP.css-1bkhbmc.app > div:nth-child(1) > div > div.ant-col.ant-col-20.ant-col-push-4.Jv5R8.css-1bkhbmc.app > div._17mcb > div:nth-child(1) > div > div > div.ICdUp > div > a
                     # print(images)
                     #sys.exit(0)
