@@ -12,6 +12,7 @@ from selenium.webdriver.common.by import By
 import time
 
 def daraz(linky):
+    print(linky)
     print("Daraz site detected")
     driver = uc.Chrome()
     driver.get(linky)
@@ -32,13 +33,16 @@ def daraz(linky):
         soup = BeautifulSoup(response.text, 'html.parser')
         #print(soup)
         images = soup.find_all("img")
-        prices = soup.find_all("span") 
         #print(images)
         for img in images:
             if(img.get("src") and img.get("alt") and "720x720" in img.get("src")):
                 print(img.get("src")) #accurately getting product image link
-        for price in prices:
-            print(price.get("class"))
+        driver.get(link)
+        spans = driver.find_elements(By.TAG_NAME, "span")
+        WebDriverWait(driver, 30).until(lambda d: d.execute_script("return document.readyState") == "complete")
+        for span in spans:
+            if("notranslate" in span.get_attribute("class") and "pdp-price_type_deleted" not in span.get_attribute("class")):
+                print("Price found: ", span.get_attribute("innerText")) #accurately getting product price
         print("Iter done")
 
 if __name__ == "__main__":
