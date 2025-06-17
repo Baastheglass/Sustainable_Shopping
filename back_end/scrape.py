@@ -11,6 +11,36 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 import time
 
+def daraz(linky):
+    print("Daraz site detected")
+    driver = uc.Chrome()
+    driver.get(linky)
+    #waiting until DOM has loaded fully
+    WebDriverWait(driver, 30).until(lambda d: d.execute_script("return document.readyState") == "complete")
+    links = driver.find_elements(By.TAG_NAME, "a")
+    product_links = []
+    for link in links:
+        # print(link.get_attribute("href"))
+        # print(type(link.get_attribute("href")))
+        if(link.get_attribute("href") != None):
+            if '/products/' in link.get_attribute("href"):
+                product_links.append(link.get_attribute("href"))
+    #print("Product links found: ", product_links)
+    for link in product_links:
+        print(link)
+        response = requests.get(link, headers=headers)
+        soup = BeautifulSoup(response.text, 'html.parser')
+        #print(soup)
+        images = soup.find_all("img")
+        prices = soup.find_all("span") 
+        #print(images)
+        for img in images:
+            if(img.get("src") and img.get("alt") and "720x720" in img.get("src")):
+                print(img.get("src")) #accurately getting product image link
+        for price in prices:
+            print(price.get("class"))
+        print("Iter done")
+
 if __name__ == "__main__":
     shopping_sites = open("./shopping_sites.txt", "r").read().splitlines()
     query = input("Enter query: ")
@@ -65,39 +95,12 @@ if __name__ == "__main__":
                     # print(image_links)
                 elif site == "daraz":
                     try:
-                        print("Daraz site detected")
-                        driver = uc.Chrome()
-                        driver.get(result)
-                        #waiting until DOM has loaded fully
-                        WebDriverWait(driver, 30).until(lambda d: d.execute_script("return document.readyState") == "complete")
-                        links = driver.find_elements(By.TAG_NAME, "a")
-                        product_links = []
-                        for link in links:
-                            # print(link.get_attribute("href"))
-                            # print(type(link.get_attribute("href")))
-                            if(link.get_attribute("href") != None):
-                                if '/products/' in link.get_attribute("href"):
-                                    product_links.append(link.get_attribute("href"))
-                        #print("Product links found: ", product_links)
-                        for link in product_links:
-                            print(link)
-                            response = requests.get(link, headers=headers)
-                            soup = BeautifulSoup(response.text, 'html.parser')
-                            #print(soup)
-                            images = soup.find_all("img")
-                            prices = soup.find_all("span") 
-                            #print(images)
-                            for img in images:
-                                if(img.get("src") and img.get("alt") and "720x720" in img.get("src")):
-                                    print(img.get("src")) #accurately getting product image link
-                            for price in prices:
-                                print(price.get("class"))
-                            print("Iter done")    
+                        daraz(result)    
                     except Exception as e:
                         print("Error occured while scraping Daraz: ", e)
                         print("Retrying")
                         driver = uc.Chrome()
-                        driver.get(result)        
+                        daraz(result)        
                         #images = soup.find_all('img')#root > div > div.ant-row.FrEdP.css-1bkhbmc.app > div:nth-child(1) > div > div.ant-col.ant-col-20.ant-col-push-4.Jv5R8.css-1bkhbmc.app > div._17mcb > div:nth-child(1) > div > div > div.ICdUp > div > a
                     # print(images)
                     #sys.exit(0)
