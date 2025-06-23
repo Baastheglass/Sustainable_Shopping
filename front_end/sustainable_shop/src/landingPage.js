@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import './landingPage.css';
 
-function App() {
+function LandingPage() {
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.code === 'Space') {
@@ -28,4 +28,4 @@ function App() {
   );
 }
 
-export default App;
+export default LandingPage;
