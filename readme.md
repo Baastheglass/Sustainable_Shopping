@@ -1,0 +1,1 @@
+cd into the sustainable_shop folder in the frontend folder and run npm install

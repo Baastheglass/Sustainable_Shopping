@@ -11,6 +11,11 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 import time
 
+class Product:
+    def __init__(self, name, img_link, price):
+        self.name = name
+        self.img_link = img_link
+        self.price = price
 def daraz(linky):
     print(linky)
     print("Daraz site detected")
