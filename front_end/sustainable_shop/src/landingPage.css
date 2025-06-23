@@ -1,0 +1,36 @@
+.landing-page {
+  height: 100vh;
+  background-image: url('background.png'); 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.content {
+  background-color: rgba(0, 0, 0, 0.5); /* semi-transparent overlay */
+  padding: 40px;
+  border-radius: 12px;
+}
+
+.title {
+  font-size: 4rem;
+  font-weight: bold;
+  color: #8d80ad;
+  margin-bottom: 20px;
+}
+
+.slogan {
+  font-size: 1.8rem;
+  color: #4e3983;
+  margin-bottom: 10px;
+}
+
+.hint {
+  font-size: 1rem;
+  color: #000000;
+  margin-top: 30px;
+}
