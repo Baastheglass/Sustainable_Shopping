@@ -16,6 +16,13 @@ class Product:
         self.name = name
         self.img_link = img_link
         self.price = price
+    def set_name(self, name):
+        self.name = name
+    def set_img_link(self, img_link):
+        self.img_link = img_link    
+    def set_price(self, price):
+        self.price = price
+
 def daraz(linky):
     print(linky)
     print("Daraz site detected")
@@ -31,23 +38,31 @@ def daraz(linky):
         if(link.get_attribute("href") != None):
             if '/products/' in link.get_attribute("href"):
                 product_links.append(link.get_attribute("href"))
+    product_links = list(set(product_links))  # Remove duplicates
     #print("Product links found: ", product_links)
     for link in product_links:
         print(link)
         response = requests.get(link, headers=headers)
         soup = BeautifulSoup(response.text, 'html.parser')
         #print(soup)
+        relevant_image_links = []
         images = soup.find_all("img")
         #print(images)
         for img in images:
             if(img.get("src") and img.get("alt") and "720x720" in img.get("src")):
                 print(img.get("src")) #accurately getting product image link
+                relevant_image_links.append(img.get("src"))
         driver.get(link)
         spans = driver.find_elements(By.TAG_NAME, "span")
         WebDriverWait(driver, 30).until(lambda d: d.execute_script("return document.readyState") == "complete")
+        prices = []
         for span in spans:
             if("notranslate" in span.get_attribute("class") and "pdp-price_type_deleted" not in span.get_attribute("class")):
                 print("Price found: ", span.get_attribute("innerText")) #accurately getting product price
+                prices.append(span.get_attribute("innerText"))
+        product_name = driver.find_element(By.CLASS_NAME, "pdp-mod-product-badge-title").text
+        print("Product name: ", product_name)
+        print("Prices:", len(prices), "Images:", len(relevant_image_links))
         print("Iter done")
 
 def habitt(linky):
@@ -104,7 +119,8 @@ if __name__ == "__main__":
                 #print("If entered")
                 
                 if site == "habitt":
-                    habitt(result)
+                    #habitt(result)
+                    pass
                 elif site == "daraz":
                     try:
                         daraz(result)    
