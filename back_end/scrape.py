@@ -23,6 +23,7 @@ class Product:
     def set_price(self, price):
         self.price = price
               
+              
 def daraz(linky):
     print(linky)
     print("Daraz site detected")
