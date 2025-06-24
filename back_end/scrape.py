@@ -23,7 +23,7 @@ class Product:
     def set_price(self, price):
         self.price = price
               
-              
+
 def daraz(linky):
     print(linky)
     print("Daraz site detected")
@@ -71,6 +71,13 @@ def habitt(linky):
     soup = BeautifulSoup(response.text, 'html.parser')
     base_habbit_link = "https://habitt.com"
     prices = soup.find_all("span", class_="price-item price-item--regular")
+    possible_item_names = soup.find_all("a", class_="card-title link-underline card-title-ellipsis")
+    item_names = []
+    for item in possible_item_names:
+        item_names.append(item)
+        print(item['data-product-title'])
+    for price in prices:
+        prices[prices.index(price)] = price.get_text()
     image_links = []
     card_links = soup.find_all("a", class_ = "card-link")
     for link in card_links:
@@ -80,15 +87,17 @@ def habitt(linky):
         possible_image_links = list(possible_image_links)
         try:
             for link in possible_image_links:
-                #print(link.get("id"))
                 if(link.get("id") != None):
                     if "product-featured-image" in link.get("id"):
                         image_link = link.get("src")
-                        image_link = str(image_link)[2:]
-                        image_links.append(image_link) 
+                        if(image_link != None):
+                            image_link = str(image_link)[2:]
+                            image_links.append(image_link) 
         except Exception as e:
             print(e)
     print(image_links)
+    print(prices)
+    print(item_names)
 
 if __name__ == "__main__":
     shopping_sites = open("./shopping_sites.txt", "r").read().splitlines()
@@ -112,24 +121,22 @@ if __name__ == "__main__":
         "Connection": "keep-alive",
         "Upgrade-Insecure-Requests": "1",
     }
-
     for result in search_results:
         print(result)
         for site in shopping_sites:
             if site in result:
                 #print("If entered")
-                
                 if site == "habitt":
-                    #habitt(result)
-                    pass
+                    habitt(result)    
                 elif site == "daraz":
-                    try:
-                        daraz(result)    
-                    except Exception as e:
-                        print("Error occured while scraping Daraz: ", e)
-                        print("Retrying")
-                        driver = uc.Chrome()
-                        daraz(result)        
+                    pass
+                    # try:
+                    #     daraz(result)    
+                    # except Exception as e:
+                    #     print("Error occured while scraping Daraz: ", e)
+                    #     print("Retrying")
+                    #     driver = uc.Chrome()
+                    #     daraz(result)        
                         #images = soup.find_all('img')#root > div > div.ant-row.FrEdP.css-1bkhbmc.app > div:nth-child(1) > div > div.ant-col.ant-col-20.ant-col-push-4.Jv5R8.css-1bkhbmc.app > div._17mcb > div:nth-child(1) > div > div > div.ICdUp > div > a
                     # print(images)
                     #sys.exit(0)
