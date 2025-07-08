@@ -6,7 +6,6 @@ CORS(app)
 
 @app.route('/get_data', methods=['GET'])
 def get_data():
-        
     data = {
         "message": "This is a placeholder response. Implement your scraping logic here."
     }
